@@ -10,7 +10,7 @@ export const localeNames: Record<Locale, string> = {
 export const locales: Locale[] = ['en', 'ja', 'ko', 'fr'];
 
 export interface Translations {
-  nav: { visaCheck: string; payments: string; esim: string; apps: string };
+  nav: { visaCheck: string; payments: string; esim: string; apps: string; blog: string };
   footer: { disclaimer: string; disclaimerLocal: string };
   meta: {
     siteTagline: string;
@@ -123,7 +123,7 @@ export interface Translations {
 }
 
 const en: Translations = {
-  nav: { visaCheck: 'Visa Check', payments: 'Payments', esim: 'eSIM', apps: 'Apps' },
+  nav: { visaCheck: 'Visa Check', payments: 'Payments', esim: 'eSIM', apps: 'Apps', blog: 'Guides' },
   footer: {
     disclaimer: 'Information is for reference only. Always verify with official sources before travel.',
     disclaimerLocal: '仅供参考 · 出行前请以官方信息为准',
@@ -330,7 +330,7 @@ const en: Translations = {
 };
 
 const ja: Translations = {
-  nav: { visaCheck: 'ビザ確認', payments: '決済', esim: 'eSIM', apps: 'アプリ' },
+  nav: { visaCheck: 'ビザ確認', payments: '決済', esim: 'eSIM', apps: 'アプリ', blog: 'ガイド' },
   footer: {
     disclaimer: '本サイトの情報は参考用です。渡航前に必ず公式情報をご確認ください。',
     disclaimerLocal: '仅供参考 · 出行前请以官方信息为准',
@@ -537,7 +537,7 @@ const ja: Translations = {
 };
 
 const ko: Translations = {
-  nav: { visaCheck: '비자 확인', payments: '결제', esim: 'eSIM', apps: '앱' },
+  nav: { visaCheck: '비자 확인', payments: '결제', esim: 'eSIM', apps: '앱', blog: '가이드' },
   footer: {
     disclaimer: '본 정보는 참고용입니다. 여행 전 반드시 공식 출처를 확인하세요.',
     disclaimerLocal: '仅供参考 · 出行前请以官方信息为准',
@@ -744,7 +744,7 @@ const ko: Translations = {
 };
 
 const fr: Translations = {
-  nav: { visaCheck: 'Visa', payments: 'Paiements', esim: 'eSIM', apps: 'Applis' },
+  nav: { visaCheck: 'Visa', payments: 'Paiements', esim: 'eSIM', apps: 'Applis', blog: 'Guides' },
   footer: {
     disclaimer: 'Ces informations sont fournies à titre indicatif. Vérifiez toujours auprès des sources officielles avant de voyager.',
     disclaimerLocal: '仅供参考 · 出行前请以官方信息为准',

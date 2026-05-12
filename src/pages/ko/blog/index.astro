@@ -1,0 +1,41 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getTranslations, getLocalePath } from '../../../i18n/utils';
+import type { Locale } from '../../../i18n/translations';
+
+const locale: Locale = 'ko';
+const t = getTranslations(locale);
+
+let posts = await getCollection('blog', (entry) => entry.id.startsWith('ko/'));
+if (posts.length === 0) {
+  posts = await getCollection('blog', (entry) => entry.id.startsWith('en/'));
+}
+const sorted = posts.sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+---
+
+<Layout title={`블로그 — ChinaTransit`} description="중국 240시간 무비자 경유에 대한 가이드와 팁." locale={locale}>
+  <section class="max-w-reading mx-auto px-4 py-16">
+    <h1 class="font-display text-4xl font-bold text-ink mb-4">가이드 & 팁</h1>
+    <p class="text-ink-light mb-12">240시간 무비자 경유로 중국을 방문하는 데 필요한 모든 것.</p>
+
+    <div class="space-y-10">
+      {sorted.map((post) => {
+        const slug = post.id.replace(/^(en|ko)\//, '').replace(/\.md$/, '');
+        return (
+          <article class="border-b border-paper-300 pb-10">
+            <a href={`/ko/blog/${slug}`} class="group">
+              <h2 class="font-display text-2xl font-semibold text-ink group-hover:text-mineral transition-colors mb-2">
+                {post.data.title}
+              </h2>
+            </a>
+            <p class="text-ink-light text-sm mb-3">{post.data.description}</p>
+            <time datetime={post.data.publishedAt} class="text-xs text-ink-light">
+              {new Date(post.data.publishedAt).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+            </time>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getTranslations, getLocalePath } from '../../i18n/utils';
+import type { Locale } from '../../i18n/translations';
+
+const locale: Locale = 'en';
+const t = getTranslations(locale);
+
+const posts = await getCollection('blog', (entry) => entry.id.startsWith('en/'));
+const sorted = posts.sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime());
+---
+
+<Layout title={`Blog — ChinaTransit`} description="Guides, tips, and everything you need to know about transiting through China visa-free." locale={locale}>
+  <section class="max-w-reading mx-auto px-4 py-16">
+    <h1 class="font-display text-4xl font-bold text-ink mb-4">Guides & Tips</h1>
+    <p class="text-ink-light mb-12">Everything you need to know about visiting China on the 240-hour visa-free transit.</p>
+
+    <div class="space-y-10">
+      {sorted.map((post) => {
+        const slug = post.id.replace('en/', '').replace(/\.md$/, '');
+        return (
+          <article class="border-b border-paper-300 pb-10">
+            <a href={`/blog/${slug}`} class="group">
+              <h2 class="font-display text-2xl font-semibold text-ink group-hover:text-mineral transition-colors mb-2">
+                {post.data.title}
+              </h2>
+            </a>
+            <p class="text-ink-light text-sm mb-3">{post.data.description}</p>
+            <div class="flex items-center gap-4 text-xs text-ink-light">
+              <time datetime={post.data.publishedAt}>
+                {new Date(post.data.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
+              <div class="flex gap-2">
+                {post.data.tags.map((tag: string) => (
+                  <span class="bg-paper-200 px-2 py-0.5 rounded text-ink-light">{tag}</span>
+                ))}
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+</Layout>
