@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PaymentWizard from '../../components/PaymentWizard';
+import { getTranslations } from '../../i18n/utils';
+import type { Locale } from '../../i18n/translations';
+
+const locale: Locale = 'fr';
+const t = getTranslations(locale);
+---
+
+<Layout title={`${t.paymentWizard.title} — ChinaTransit`} locale={locale}>
+  <PaymentWizard client:load locale={locale} />
+</Layout>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  :global(.animate-fadeIn) {
+    animation: fadeIn 0.3s ease-out;
+  }
+</style>

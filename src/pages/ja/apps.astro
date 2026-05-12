@@ -1,0 +1,96 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getTranslations } from '../../i18n/utils';
+import type { Locale } from '../../i18n/translations';
+
+const locale: Locale = 'ja';
+const t = getTranslations(locale);
+
+const mustHave = t.apps.items.slice(0, 3);
+const recommended = t.apps.items.slice(3, 5);
+const niceToHave = t.apps.items.slice(5, 7);
+---
+
+<Layout title={`${t.apps.title} — ChinaTransit`} locale={locale}>
+  <div class="max-w-reading mx-auto px-4 py-12">
+    <div class="text-center mb-10">
+      <p class="font-chinese text-ink-light text-sm mb-2">{t.apps.subtitleLocal}</p>
+      <h1 class="font-display text-4xl font-bold text-ink">{t.apps.title}</h1>
+      <p class="text-ink-light mt-2">{t.apps.subtitle}</p>
+    </div>
+
+    <div class="space-y-8">
+      <div>
+        <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+          <span class="w-2 h-2 bg-cinnabar rounded-full"></span>
+          {t.apps.mustHave}
+        </h2>
+        <div class="space-y-4">
+          {mustHave.map((app) => (
+            <div class="p-5 bg-paper-100 rounded-lg border border-paper-300">
+              <div class="flex items-baseline gap-2 mb-1">
+                <h3 class="font-semibold text-lg">{app.name}</h3>
+                {app.nameCn && <span class="font-chinese text-ink-light text-sm">{app.nameCn}</span>}
+                <span class="ml-auto text-xs bg-paper-200 text-ink-light px-2 py-0.5 rounded">{app.category}</span>
+              </div>
+              <p class="text-sm text-ink-light mb-2">{app.description}</p>
+              <p class="text-xs text-mineral"><strong>{t.apps.tipLabel}</strong> {app.tip}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+          <span class="w-2 h-2 bg-jade rounded-full"></span>
+          {t.apps.recommended}
+        </h2>
+        <div class="space-y-4">
+          {recommended.map((app) => (
+            <div class="p-5 bg-paper-100 rounded-lg border border-paper-300">
+              <div class="flex items-baseline gap-2 mb-1">
+                <h3 class="font-semibold text-lg">{app.name}</h3>
+                {app.nameCn && <span class="font-chinese text-ink-light text-sm">{app.nameCn}</span>}
+                <span class="ml-auto text-xs bg-paper-200 text-ink-light px-2 py-0.5 rounded">{app.category}</span>
+              </div>
+              <p class="text-sm text-ink-light mb-2">{app.description}</p>
+              <p class="text-xs text-mineral"><strong>{t.apps.tipLabel}</strong> {app.tip}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2 class="font-display text-xl font-semibold mb-4 flex items-center gap-2">
+          <span class="w-2 h-2 bg-mineral rounded-full"></span>
+          {t.apps.niceToHave}
+        </h2>
+        <div class="space-y-4">
+          {niceToHave.map((app) => (
+            <div class="p-5 bg-paper-100 rounded-lg border border-paper-300">
+              <div class="flex items-baseline gap-2 mb-1">
+                <h3 class="font-semibold text-lg">{app.name}</h3>
+                {app.nameCn && <span class="font-chinese text-ink-light text-sm">{app.nameCn}</span>}
+                <span class="ml-auto text-xs bg-paper-200 text-ink-light px-2 py-0.5 rounded">{app.category}</span>
+              </div>
+              <p class="text-sm text-ink-light mb-2">{app.description}</p>
+              <p class="text-xs text-mineral"><strong>{t.apps.tipLabel}</strong> {app.tip}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="p-6 bg-mineral/10 rounded-xl border border-mineral mt-10">
+        <h3 class="font-semibold mb-4">{t.apps.checklistTitle}</h3>
+        <ul class="space-y-3">
+          {t.apps.checklist.map((item: string) => (
+            <li class="flex gap-3 text-sm">
+              <input type="checkbox" class="mt-0.5 accent-mineral" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</Layout>

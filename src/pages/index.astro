@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getTranslations, getLocalePath } from '../i18n/utils';
+import type { Locale } from '../i18n/translations';
+
+const locale: Locale = 'en';
+const t = getTranslations(locale);
+---
+
+<Layout title={`ChinaTransit — ${t.meta.siteTagline}`} locale={locale}>
+  <section class="max-w-reading mx-auto px-4 py-16 text-center">
+    <p class="font-chinese text-ink-light text-sm mb-4">{t.home.subtitleLocal}</p>
+    <h1 class="font-display text-5xl md:text-6xl font-bold text-ink mb-6">
+      {t.home.title}
+    </h1>
+    <p class="text-lg text-ink-light max-w-md mx-auto mb-10">
+      {t.home.description}
+    </p>
+
+    <a
+      href={getLocalePath('/check', locale)}
+      class="inline-block bg-mineral text-paper-50 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-mineral-light transition-colors"
+    >
+      {t.home.cta}
+    </a>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20 text-left">
+      <div class="p-6 bg-paper-100 rounded-lg border border-paper-300">
+        <div class="text-2xl mb-3">{t.home.visaCheckerEmoji}</div>
+        <h3 class="font-display text-xl font-semibold mb-2">{t.home.visaCheckerTitle}</h3>
+        <p class="text-ink-light text-sm">{t.home.visaCheckerDesc}</p>
+      </div>
+
+      <div class="p-6 bg-paper-100 rounded-lg border border-paper-300">
+        <div class="text-2xl mb-3">{t.home.paymentEmoji}</div>
+        <h3 class="font-display text-xl font-semibold mb-2">{t.home.paymentTitle}</h3>
+        <p class="text-ink-light text-sm">{t.home.paymentDesc}</p>
+      </div>
+
+      <div class="p-6 bg-paper-100 rounded-lg border border-paper-300">
+        <div class="text-2xl mb-3">{t.home.appsEmoji}</div>
+        <h3 class="font-display text-xl font-semibold mb-2">{t.home.appsTitle}</h3>
+        <p class="text-ink-light text-sm">{t.home.appsDesc}</p>
+      </div>
+    </div>
+  </section>
+</Layout>
