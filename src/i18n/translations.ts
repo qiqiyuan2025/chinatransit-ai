@@ -43,6 +43,10 @@ export interface Translations {
     eligibleCount: string;
     continue: string;
     passport: string;
+    originQuestion: string;
+    originDescription: string;
+    selectOrigin: string;
+    origin: string;
     entryQuestion: string;
     selectEntry: string;
     exitQuestion: string;
@@ -55,6 +59,14 @@ export interface Translations {
     clockStart: string;
     accessibleProvinces: string;
     importantRules: string;
+    warningsTitle: string;
+    warningMessages: {
+      ONWARD_TICKET_REQUIRED: string;
+      DIGITAL_ARRIVAL_CARD: string;
+      CONNECTING_FLIGHT_ORIGIN: string;
+      HKMO_TW_REGION_NOTE: string;
+      NATIONALITY_DIFFERS_FROM_ORIGIN: string;
+    };
     arrivalCard: string;
     checkAnother: string;
     notEligibleLocal: string;
@@ -62,7 +74,7 @@ export interface Translations {
     errors: {
       NATIONALITY_INELIGIBLE: { title: string; hint: string };
       PORT_PAIR_INVALID: { title: string; hint: string };
-      SAME_COUNTRY_EXIT: { title: string; hint: string };
+      SAME_ORIGIN_DESTINATION: { title: string; hint: string };
       default: { title: string };
     };
   };
@@ -159,6 +171,10 @@ const en: Translations = {
     eligibleCount: '55 nationalities are currently eligible for the 240-hour transit visa-free policy.',
     continue: 'Continue →',
     passport: 'Passport',
+    originQuestion: 'Where are you flying from?',
+    originDescription: 'The country/region you will depart from before entering China. If you have a connecting flight, this is the country where you clear immigration (usually your first departure point).',
+    selectOrigin: 'Select origin country...',
+    origin: 'Origin',
     entryQuestion: 'Where will you enter China?',
     selectEntry: 'Select entry port...',
     exitQuestion: 'Where are you heading after China?',
@@ -171,6 +187,14 @@ const en: Translations = {
     clockStart: '',
     accessibleProvinces: 'Accessible Provinces',
     importantRules: 'Important Rules',
+    warningsTitle: 'Good to Know',
+    warningMessages: {
+      ONWARD_TICKET_REQUIRED: 'You must have a confirmed onward ticket to your exit destination before boarding.',
+      DIGITAL_ARRIVAL_CARD: 'Fill out the Digital Arrival Card online before you land to speed up immigration.',
+      CONNECTING_FLIGHT_ORIGIN: 'If you have a connecting flight before China, immigration considers your first departure country as the origin.',
+      HKMO_TW_REGION_NOTE: 'Hong Kong, Macau, and Taiwan are treated as separate regions for transit purposes — not as mainland China.',
+      NATIONALITY_DIFFERS_FROM_ORIGIN: 'Your nationality differs from your origin country. Immigration will check your last departure point, not your passport country.',
+    },
     arrivalCard: 'Fill Out Digital Arrival Card →',
     checkAnother: 'Check another route',
     notEligibleLocal: '不符合条件',
@@ -184,9 +208,9 @@ const en: Translations = {
         title: 'Invalid Route',
         hint: 'The entry and exit ports must be within the same regional group. Try selecting a different entry port or check which ports belong to each region.',
       },
-      SAME_COUNTRY_EXIT: {
-        title: 'Same-Country Exit',
-        hint: 'Your exit destination must be a different country from your origin. Try selecting a different destination. Hong Kong, Macau, and Taiwan count as separate regions.',
+      SAME_ORIGIN_DESTINATION: {
+        title: 'Same Origin & Destination',
+        hint: 'Transit visa-free means traveling FROM one country THROUGH China TO a different country. Your origin and exit destination cannot be the same. Hong Kong, Macau, and Taiwan count as separate regions.',
       },
       default: { title: 'Not Eligible' },
     },
@@ -366,6 +390,10 @@ const ja: Translations = {
     eligibleCount: '現在55カ国の国籍が240時間トランジットビザ免除の対象です。',
     continue: '続ける →',
     passport: 'パスポート',
+    originQuestion: 'どこから出発しますか？',
+    originDescription: '中国に入国する前に出発する国・地域。乗り継ぎ便の場合、出入国管理で確認されるのは最初の出発国です。',
+    selectOrigin: '出発国を選択...',
+    origin: '出発地',
     entryQuestion: '中国のどこから入国しますか？',
     selectEntry: '入国地を選択...',
     exitQuestion: '中国の後はどこへ向かいますか？',
@@ -378,6 +406,14 @@ const ja: Translations = {
     clockStart: '',
     accessibleProvinces: '滞在可能な省',
     importantRules: '重要なルール',
+    warningsTitle: '知っておくと便利',
+    warningMessages: {
+      ONWARD_TICKET_REQUIRED: '搭乗前に出国先への確定済み航空券が必要です。',
+      DIGITAL_ARRIVAL_CARD: '入国審査をスムーズにするため、到着前にデジタル入国カードをオンラインで記入してください。',
+      CONNECTING_FLIGHT_ORIGIN: '中国到着前に乗り継ぎがある場合、出入国管理では最初の出発国が出発地として扱われます。',
+      HKMO_TW_REGION_NOTE: '香港、マカオ、台湾はトランジット目的では別の地域として扱われます（中国本土とは別）。',
+      NATIONALITY_DIFFERS_FROM_ORIGIN: '国籍と出発国が異なります。出入国管理では、パスポートの国籍ではなく、最後の出発地が確認されます。',
+    },
     arrivalCard: 'デジタル入国カードを記入 →',
     checkAnother: '別のルートを確認',
     notEligibleLocal: '不符合条件',
@@ -391,9 +427,9 @@ const ja: Translations = {
         title: '無効なルート',
         hint: '入国地と出国地は同じ地域グループ内である必要があります。別の入国地を選択するか、各地域に属する港を確認してください。',
       },
-      SAME_COUNTRY_EXIT: {
-        title: '同一国出国',
-        hint: '出国先は出発国とは異なる国である必要があります。別の目的地を選択してください。香港、マカオ、台湾は別の地域として扱われます。',
+      SAME_ORIGIN_DESTINATION: {
+        title: '出発地と目的地が同一',
+        hint: 'トランジットビザ免除とは、ある国から中国を経由して別の国へ旅行することです。出発地と出国先は同じにできません。香港、マカオ、台湾は別の地域として扱われます。',
       },
       default: { title: '資格なし' },
     },
@@ -573,6 +609,10 @@ const ko: Translations = {
     eligibleCount: '현재 55개국 국적이 240시간 무비자 환승 대상입니다.',
     continue: '계속 →',
     passport: '여권',
+    originQuestion: '어디에서 출발하시나요?',
+    originDescription: '중국에 입국하기 전에 출발하는 국가/지역. 환승편이 있는 경우, 출입국 관리에서 확인하는 것은 최초 출발국입니다.',
+    selectOrigin: '출발 국가를 선택...',
+    origin: '출발지',
     entryQuestion: '중국 어디로 입국하시나요?',
     selectEntry: '입국 항구를 선택...',
     exitQuestion: '중국 이후 어디로 가시나요?',
@@ -585,6 +625,14 @@ const ko: Translations = {
     clockStart: '',
     accessibleProvinces: '체류 가능 지역',
     importantRules: '중요 규정',
+    warningsTitle: '알아두면 좋은 정보',
+    warningMessages: {
+      ONWARD_TICKET_REQUIRED: '탑승 전 출국 목적지행 확정 항공권이 필요합니다.',
+      DIGITAL_ARRIVAL_CARD: '입국 심사를 원활하게 하기 위해 도착 전 온라인으로 디지털 입국카드를 작성하세요.',
+      CONNECTING_FLIGHT_ORIGIN: '중국 도착 전 환승이 있는 경우, 출입국 관리에서는 최초 출발국을 출발지로 간주합니다.',
+      HKMO_TW_REGION_NOTE: '홍콩, 마카오, 대만은 환승 목적상 별도 지역으로 취급됩니다 (중국 본토와 별개).',
+      NATIONALITY_DIFFERS_FROM_ORIGIN: '국적과 출발 국가가 다릅니다. 출입국 관리에서는 여권 국적이 아닌 마지막 출발지를 확인합니다.',
+    },
     arrivalCard: '디지털 입국카드 작성 →',
     checkAnother: '다른 경로 확인',
     notEligibleLocal: '不符合条件',
@@ -598,9 +646,9 @@ const ko: Translations = {
         title: '무효 경로',
         hint: '입국 항구와 출국 항구가 같은 지역 그룹 내에 있어야 합니다. 다른 입국 항구를 선택하거나 각 지역에 속한 항구를 확인하세요.',
       },
-      SAME_COUNTRY_EXIT: {
-        title: '동일국 출국',
-        hint: '출국 목적지는 출발국과 다른 국가여야 합니다. 다른 목적지를 선택하세요. 홍콩, 마카오, 대만은 별도 지역으로 간주됩니다.',
+      SAME_ORIGIN_DESTINATION: {
+        title: '출발지와 목적지 동일',
+        hint: '무비자 환승은 한 국가에서 중국을 경유하여 다른 국가로 여행하는 것입니다. 출발지와 출국 목적지는 같을 수 없습니다. 홍콩, 마카오, 대만은 별도 지역으로 간주됩니다.',
       },
       default: { title: '자격 없음' },
     },
@@ -780,6 +828,10 @@ const fr: Translations = {
     eligibleCount: '55 nationalités sont actuellement éligibles à la politique de transit sans visa de 240 heures.',
     continue: 'Continuer →',
     passport: 'Passeport',
+    originQuestion: "D'où partez-vous ?",
+    originDescription: "Le pays/région d'où vous partirez avant d'entrer en Chine. En cas de correspondance, l'immigration considère le pays de votre premier départ.",
+    selectOrigin: "Sélectionnez le pays d'origine...",
+    origin: 'Origine',
     entryQuestion: 'Par où entrerez-vous en Chine ?',
     selectEntry: "Sélectionnez le port d'entrée...",
     exitQuestion: 'Quelle est votre destination après la Chine ?',
@@ -792,6 +844,14 @@ const fr: Translations = {
     clockStart: '',
     accessibleProvinces: 'Provinces accessibles',
     importantRules: 'Règles importantes',
+    warningsTitle: 'Bon à savoir',
+    warningMessages: {
+      ONWARD_TICKET_REQUIRED: "Vous devez avoir un billet confirmé vers votre destination de sortie avant l'embarquement.",
+      DIGITAL_ARRIVAL_CARD: "Remplissez la carte d'arrivée numérique en ligne avant d'atterrir pour accélérer le passage à l'immigration.",
+      CONNECTING_FLIGHT_ORIGIN: "Si vous avez une correspondance avant la Chine, l'immigration considère votre premier pays de départ comme l'origine.",
+      HKMO_TW_REGION_NOTE: 'Hong Kong, Macao et Taïwan sont traités comme des régions distinctes pour le transit — pas comme la Chine continentale.',
+      NATIONALITY_DIFFERS_FROM_ORIGIN: "Votre nationalité diffère de votre pays d'origine. L'immigration vérifiera votre dernier point de départ, pas votre pays de passeport.",
+    },
     arrivalCard: "Remplir la carte d'arrivée numérique →",
     checkAnother: 'Vérifier un autre itinéraire',
     notEligibleLocal: '不符合条件',
@@ -805,9 +865,9 @@ const fr: Translations = {
         title: 'Itinéraire invalide',
         hint: "Les ports d'entrée et de sortie doivent être dans le même groupe régional. Essayez un autre port d'entrée ou vérifiez quels ports appartiennent à chaque région.",
       },
-      SAME_COUNTRY_EXIT: {
-        title: 'Sortie vers le même pays',
-        hint: "Votre destination de sortie doit être un pays différent de votre pays d'origine. Essayez une autre destination. Hong Kong, Macao et Taïwan comptent comme des régions distinctes.",
+      SAME_ORIGIN_DESTINATION: {
+        title: 'Même origine et destination',
+        hint: "Le transit sans visa signifie voyager D'UN pays À TRAVERS la Chine VERS un autre pays. Votre origine et votre destination de sortie ne peuvent pas être identiques. Hong Kong, Macao et Taïwan comptent comme des régions distinctes.",
       },
       default: { title: 'Non éligible' },
     },

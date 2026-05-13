@@ -3,24 +3,27 @@ import {
   checkEligibility,
   getAllCountries,
   getAllPorts,
-  getPortsForGroup,
-  getGroupForPort,
+  getOriginExtras,
 } from '../lib/eligibility';
 import type { EligibilityResult } from '../lib/types';
 import { getTranslations } from '../i18n/utils';
 import type { Locale } from '../i18n/translations';
 
-type Step = 'nationality' | 'entry' | 'exit' | 'result';
+type Step = 'nationality' | 'origin' | 'entry' | 'exit' | 'result';
+
+const STEPS: Step[] = ['nationality', 'origin', 'entry', 'exit', 'result'];
 
 export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Locale }) {
   const t = getTranslations(locale);
   const [step, setStep] = useState<Step>('nationality');
   const [nationality, setNationality] = useState('');
+  const [originCountry, setOriginCountry] = useState('');
   const [entryPort, setEntryPort] = useState('');
   const [exitDestination, setExitDestination] = useState('');
   const [result, setResult] = useState<EligibilityResult | null>(null);
 
   const countries = useMemo(() => getAllCountries(), []);
+  const originExtras = useMemo(() => getOriginExtras(), []);
 
   // Prefill nationality from IP geolocation
   useEffect(() => {
@@ -33,22 +36,56 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
       })
       .catch(() => {}); // Silent fail — user picks manually
   }, [countries]);
+
   const allPorts = useMemo(() => getAllPorts(), []);
 
-  // After entry port is selected, show only exit destinations (countries + HK/MO/TW)
+  // Origin options: eligible countries + extras + HK/MO/TW
+  const originOptions = useMemo(() => {
+    const seen = new Set<string>();
+    const base: { code: string; label: string }[] = [];
+
+    for (const c of countries) {
+      if (!seen.has(c.code)) {
+        seen.add(c.code);
+        base.push({ code: c.code, label: `${c.flag} ${c.name}` });
+      }
+    }
+    for (const c of originExtras) {
+      if (!seen.has(c.code)) {
+        seen.add(c.code);
+        base.push({ code: c.code, label: `${c.flag} ${c.name}` });
+      }
+    }
+    // Add HK, MO, TW as separate origin options
+    if (!seen.has('HK')) base.push({ code: 'HK', label: '\u{1F1ED}\u{1F1F0} Hong Kong' });
+    if (!seen.has('MO')) base.push({ code: 'MO', label: '\u{1F1F2}\u{1F1F4} Macau' });
+    if (!seen.has('TW')) base.push({ code: 'TW', label: '\u{1F1F9}\u{1F1FC} Taiwan' });
+
+    return base.sort((a, b) => a.label.localeCompare(b.label));
+  }, [countries, originExtras]);
+
+  // Exit options: eligible countries + HK/MO/TW
   const exitOptions = useMemo(() => {
     const base = countries.map((c) => ({ code: c.code, label: `${c.flag} ${c.name}` }));
-    // Add HK, MO, TW as separate exit destinations
     base.push(
-      { code: 'HK', label: '🇭🇰 Hong Kong' },
-      { code: 'MO', label: '🇲🇴 Macau' },
-      { code: 'TW', label: '🇹🇼 Taiwan' }
+      { code: 'HK', label: '\u{1F1ED}\u{1F1F0} Hong Kong' },
+      { code: 'MO', label: '\u{1F1F2}\u{1F1F4} Macau' },
+      { code: 'TW', label: '\u{1F1F9}\u{1F1FC} Taiwan' }
     );
     return base.sort((a, b) => a.label.localeCompare(b.label));
   }, [countries]);
 
   function handleNationalitySelect(code: string) {
     setNationality(code);
+    setOriginCountry('');
+    setEntryPort('');
+    setExitDestination('');
+    setResult(null);
+    setStep('origin');
+  }
+
+  function handleOriginSelect(code: string) {
+    setOriginCountry(code);
     setEntryPort('');
     setExitDestination('');
     setResult(null);
@@ -64,7 +101,7 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
 
   function handleExitSelect(destCode: string) {
     setExitDestination(destCode);
-    const res = checkEligibility(nationality, entryPort, destCode);
+    const res = checkEligibility(nationality, originCountry, entryPort, destCode);
     setResult(res);
     setStep('result');
   }
@@ -72,14 +109,18 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
   function handleReset() {
     setStep('nationality');
     setNationality('');
+    setOriginCountry('');
     setEntryPort('');
     setExitDestination('');
     setResult(null);
   }
 
   function handleBack() {
-    if (step === 'entry') {
+    if (step === 'origin') {
       setStep('nationality');
+      setOriginCountry('');
+    } else if (step === 'entry') {
+      setStep('origin');
       setEntryPort('');
     } else if (step === 'exit') {
       setStep('entry');
@@ -91,7 +132,10 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
   }
 
   const selectedCountry = countries.find((c) => c.code === nationality);
+  const selectedOrigin = originOptions.find((o) => o.code === originCountry);
   const selectedPort = allPorts.find((p) => p.id === entryPort);
+
+  const stepIndex = STEPS.indexOf(step);
 
   return (
     <div className="max-w-reading mx-auto px-4 py-12">
@@ -104,25 +148,23 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
 
       {/* Progress indicator */}
       <div className="flex items-center justify-center gap-2 mb-10">
-        {(['nationality', 'entry', 'exit', 'result'] as Step[]).map((s, i) => (
+        {STEPS.map((s, i) => (
           <div key={s} className="flex items-center gap-2">
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
                 step === s
                   ? 'bg-mineral text-paper-50'
-                  : i < ['nationality', 'entry', 'exit', 'result'].indexOf(step)
+                  : i < stepIndex
                   ? 'bg-jade text-paper-50'
                   : 'bg-paper-200 text-ink-light'
               }`}
             >
               {i + 1}
             </div>
-            {i < 3 && (
+            {i < STEPS.length - 1 && (
               <div
-                className={`w-8 h-0.5 ${
-                  i < ['nationality', 'entry', 'exit', 'result'].indexOf(step)
-                    ? 'bg-jade'
-                    : 'bg-paper-300'
+                className={`w-6 h-0.5 ${
+                  i < stepIndex ? 'bg-jade' : 'bg-paper-300'
                 }`}
               />
             )}
@@ -176,14 +218,55 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
         </div>
       )}
 
-      {/* Step 2: Entry port */}
-      {step === 'entry' && (
+      {/* Step 2: Origin country */}
+      {step === 'origin' && (
         <div className="animate-fadeIn">
           <div className="mb-4 p-3 bg-paper-100 rounded-lg border border-paper-300 text-sm">
             <span className="text-ink-light">{t.visaChecker.passport}:</span>{' '}
             <span className="font-semibold">
               {selectedCountry?.flag} {selectedCountry?.name}
             </span>
+          </div>
+          <label className="block text-lg font-semibold mb-2">
+            {t.visaChecker.originQuestion}
+          </label>
+          <p className="text-sm text-ink-light mb-4">
+            {t.visaChecker.originDescription}
+          </p>
+          <div className="relative">
+            <select
+              value={originCountry}
+              onChange={(e) => e.target.value && handleOriginSelect(e.target.value)}
+              className="w-full p-4 bg-paper-100 border border-paper-300 rounded-lg text-ink text-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-mineral"
+            >
+              <option value="">{t.visaChecker.selectOrigin}</option>
+              {originOptions.map((o) => (
+                <option key={o.code} value={o.code}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-ink-light">
+              ▾
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Step 3: Entry port */}
+      {step === 'entry' && (
+        <div className="animate-fadeIn">
+          <div className="mb-4 space-y-2">
+            <div className="p-3 bg-paper-100 rounded-lg border border-paper-300 text-sm">
+              <span className="text-ink-light">{t.visaChecker.passport}:</span>{' '}
+              <span className="font-semibold">
+                {selectedCountry?.flag} {selectedCountry?.name}
+              </span>
+            </div>
+            <div className="p-3 bg-paper-100 rounded-lg border border-paper-300 text-sm">
+              <span className="text-ink-light">{t.visaChecker.origin}:</span>{' '}
+              <span className="font-semibold">{selectedOrigin?.label}</span>
+            </div>
           </div>
           <label className="block text-lg font-semibold mb-4">
             {t.visaChecker.entryQuestion}
@@ -203,7 +286,7 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
         </div>
       )}
 
-      {/* Step 3: Exit destination */}
+      {/* Step 4: Exit destination */}
       {step === 'exit' && (
         <div className="animate-fadeIn">
           <div className="mb-4 space-y-2">
@@ -212,6 +295,10 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
               <span className="font-semibold">
                 {selectedCountry?.flag} {selectedCountry?.name}
               </span>
+            </div>
+            <div className="p-3 bg-paper-100 rounded-lg border border-paper-300 text-sm">
+              <span className="text-ink-light">{t.visaChecker.origin}:</span>{' '}
+              <span className="font-semibold">{selectedOrigin?.label}</span>
             </div>
             <div className="p-3 bg-paper-100 rounded-lg border border-paper-300 text-sm">
               <span className="text-ink-light">{t.visaChecker.entryQuestion.replace('?', '')}:</span>{' '}
@@ -241,7 +328,7 @@ export default function VisaChecker({ locale = 'en' as Locale }: { locale?: Loca
         </div>
       )}
 
-      {/* Step 4: Result */}
+      {/* Step 5: Result */}
       {step === 'result' && result && (
         <div className="animate-fadeIn">
           {result.eligible ? (
@@ -326,6 +413,23 @@ function EligibleResult({
             ))}
           </ul>
         </div>
+
+        {/* Contextual warnings */}
+        {result.warnings.length > 0 && (
+          <div className="p-4 bg-mineral/5 rounded-lg border border-mineral/20">
+            <h3 className="font-semibold text-sm text-mineral mb-2">
+              {t.visaChecker.warningsTitle}
+            </h3>
+            <ul className="space-y-2">
+              {result.warnings.map((code) => (
+                <li key={code} className="text-sm flex gap-2">
+                  <span className="text-mineral shrink-0">ℹ</span>
+                  <span>{t.visaChecker.warningMessages[code]}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <a
           href={result.arrivalCardUrl}

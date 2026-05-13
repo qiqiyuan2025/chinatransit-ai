@@ -1,17 +1,20 @@
-import type { EligibilityResult, Country, Port, Groups } from './types';
+import type { EligibilityResult, WarningCode, Country, Port, Groups } from './types';
 import countriesData from '../data/countries.json';
+import originExtrasData from '../data/origin-extras.json';
 import portsData from '../data/ports.json';
 import groupsData from '../data/groups.json';
 
 const countries = countriesData as Country[];
+const originExtras = originExtrasData as Country[];
 const ports = portsData as Port[];
 const groups = groupsData as Groups;
 
-// Regions that count as "different country" for third-country rule
+// Regions that count as "different country/region" for third-country rule
 const SEPARATE_REGIONS = ['HK', 'MO', 'TW'];
 
 export function checkEligibility(
   nationalityCode: string,
+  originCountry: string,
   entryPortId: string,
   exitDestination: string
 ): EligibilityResult {
@@ -28,6 +31,7 @@ export function checkEligibility(
       clockStart: '',
       mustExitBy: '',
       thirdCountryValid: false,
+      warnings: [],
       errorCode: 'NATIONALITY_INELIGIBLE',
       errorMessage: `Passport holders from this country are not currently eligible for the 240-hour transit visa-free policy.`,
     };
@@ -46,6 +50,7 @@ export function checkEligibility(
       clockStart: '',
       mustExitBy: '',
       thirdCountryValid: false,
+      warnings: [],
       errorCode: 'PORT_PAIR_INVALID',
       errorMessage: 'Entry port not found.',
     };
@@ -64,17 +69,17 @@ export function checkEligibility(
       clockStart: '',
       mustExitBy: '',
       thirdCountryValid: false,
+      warnings: [],
       errorCode: 'PORT_PAIR_INVALID',
       errorMessage: 'Regional group not found for this port.',
     };
   }
 
-  // Check third-country rule
-  const isSameCountry =
-    exitDestination === nationalityCode &&
-    !SEPARATE_REGIONS.includes(exitDestination);
+  // Check third-country rule: origin and exit must differ
+  // HK/MO/TW count as separate regions (distinct from each other and from mainland)
+  const isSameOriginDest = originCountry === exitDestination;
 
-  if (isSameCountry) {
+  if (isSameOriginDest) {
     return {
       eligible: false,
       hours: 0,
@@ -85,15 +90,28 @@ export function checkEligibility(
       clockStart: '',
       mustExitBy: '',
       thirdCountryValid: false,
-      errorCode: 'SAME_COUNTRY_EXIT',
-      errorMessage: `Your exit destination must be a different country from your origin. Hong Kong, Macau, and Taiwan count as separate regions for this purpose.`,
+      warnings: [],
+      errorCode: 'SAME_ORIGIN_DESTINATION',
+      errorMessage: `Your origin and exit destination must be different countries/regions. You cannot transit through China and return to the same place you departed from.`,
     };
   }
 
-  // Get exit ports in the same group
-  const exitPorts = ports
-    .filter((p) => p.group === entryPort.group)
-    .map((p) => `${p.name} (${p.city})`);
+  // Build contextual warnings
+  const warnings: WarningCode[] = [];
+
+  // Always warn about onward ticket and arrival card
+  warnings.push('ONWARD_TICKET_REQUIRED');
+  warnings.push('DIGITAL_ARRIVAL_CARD');
+
+  // If origin is a connecting flight hub, warn about immigration origin determination
+  if (originCountry !== nationalityCode) {
+    warnings.push('NATIONALITY_DIFFERS_FROM_ORIGIN');
+  }
+
+  // If HK/MO/TW is involved as origin or exit
+  if (SEPARATE_REGIONS.includes(originCountry) || SEPARATE_REGIONS.includes(exitDestination)) {
+    warnings.push('HKMO_TW_REGION_NOTE');
+  }
 
   return {
     eligible: true,
@@ -110,6 +128,7 @@ export function checkEligibility(
     clockStart: '00:00 on the day after arrival',
     mustExitBy: '240 hours from clock start (10 calendar days)',
     thirdCountryValid: true,
+    warnings,
   };
 }
 
@@ -123,6 +142,10 @@ export function getAllPorts(): Port[] {
 
 export function getAllCountries(): Country[] {
   return countries;
+}
+
+export function getOriginExtras(): Country[] {
+  return originExtras;
 }
 
 export function getGroupForPort(portId: string): string | undefined {

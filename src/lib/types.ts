@@ -22,10 +22,17 @@ export type RegionalGroup = {
 
 export type Groups = Record<string, RegionalGroup>;
 
+export type WarningCode =
+  | 'ONWARD_TICKET_REQUIRED'
+  | 'DIGITAL_ARRIVAL_CARD'
+  | 'CONNECTING_FLIGHT_ORIGIN'
+  | 'HKMO_TW_REGION_NOTE'
+  | 'NATIONALITY_DIFFERS_FROM_ORIGIN';
+
 export type ErrorCode =
   | 'NATIONALITY_INELIGIBLE'
   | 'PORT_PAIR_INVALID'
-  | 'SAME_COUNTRY_EXIT';
+  | 'SAME_ORIGIN_DESTINATION';
 
 export type EligibilityResult = {
   eligible: boolean;
@@ -37,6 +44,7 @@ export type EligibilityResult = {
   clockStart: string;
   mustExitBy: string;
   thirdCountryValid: boolean;
+  warnings: WarningCode[];
   errorCode?: ErrorCode;
   errorMessage?: string;
 };
