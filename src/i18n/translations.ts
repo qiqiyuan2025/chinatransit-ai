@@ -101,8 +101,10 @@ export interface Translations {
     subtitle: string;
     esimRecommended: string;
     esimDesc: string;
-    airaloTitle: string;
-    airaloDesc: string;
+    redteagoTitle: string;
+    redteagoUrl: string;
+    redteagoDesc: string;
+    redteagoBullets: string[];
     nomadTitle: string;
     nomadDesc: string;
     airportSimTitle: string;
@@ -298,8 +300,16 @@ const en: Translations = {
     subtitle: 'Stay connected from the moment you land.',
     esimRecommended: 'eSIM (Recommended)',
     esimDesc: 'Buy before you fly. Activates instantly when you land. No physical SIM swap needed.',
-    airaloTitle: 'Airalo',
-    airaloDesc: 'Most popular for travelers. China plans from ~$5/1GB. Buy in the app, scan QR code, activate on arrival. Data-only (no Chinese phone number).',
+    redteagoTitle: 'Redteago',
+    redteagoUrl: 'https://esim.redteago.com/',
+    redteagoDesc: 'Purpose-built for China and Asia travel. Routes traffic outside the Great Firewall by default — Google, Gmail, Instagram, WhatsApp, and YouTube just work, no separate VPN needed.',
+    redteagoBullets: [
+      'Bypasses the Great Firewall — Google, Gmail, Maps, WhatsApp, and Instagram work out of the box',
+      'Local-network speeds across mainland China, Hong Kong, Macau, and Taiwan',
+      'Flexible plans from a few dollars, easy top-ups, no contracts',
+      'Instant QR code delivery — install before you fly, activates the moment you land',
+      '24/7 chat support in English from a team that knows China connectivity',
+    ],
     nomadTitle: 'Nomad / Holafly',
     nomadDesc: 'Unlimited data plans available. Good if you plan to stream or use maps heavily. Slightly pricier.',
     airportSimTitle: 'Airport SIM Card',
@@ -517,8 +527,16 @@ const ja: Translations = {
     subtitle: '到着した瞬間からネットに接続。',
     esimRecommended: 'eSIM（おすすめ）',
     esimDesc: '出発前に購入。到着と同時にアクティベート。物理SIMの入れ替え不要。',
-    airaloTitle: 'Airalo',
-    airaloDesc: '旅行者に最も人気。中国プランは1GBあたり約5ドルから。アプリで購入、QRコードをスキャン、到着時にアクティベート。データ通信のみ（中国の電話番号なし）。',
+    redteagoTitle: 'Redteago',
+    redteagoUrl: 'https://esim.redteago.com/',
+    redteagoDesc: '中国・アジア旅行に特化したeSIM。通信がグレート・ファイアウォールの外を経由するため、Google・Gmail・Instagram・WhatsApp・YouTubeが別途VPNなしでそのまま使えます。',
+    redteagoBullets: [
+      'ファイアウォール回避済み — Google、Gmail、マップ、WhatsApp、Instagramがそのまま使える',
+      '中国本土・香港・マカオ・台湾でローカル並みの通信速度',
+      '数ドルからの柔軟なプラン、簡単なチャージ、契約縛りなし',
+      'QRコードを即時発行 — 出発前にインストール、到着と同時にアクティベート',
+      '中国の通信事情に詳しいチームによる英語の24時間チャットサポート',
+    ],
     nomadTitle: 'Nomad / Holafly',
     nomadDesc: '無制限データプランあり。動画視聴や地図の頻繁な利用を予定している方に最適。やや割高。',
     airportSimTitle: '空港SIMカード',
@@ -736,8 +754,16 @@ const ko: Translations = {
     subtitle: '도착 즉시 인터넷에 연결하세요.',
     esimRecommended: 'eSIM (추천)',
     esimDesc: '출발 전 구매. 도착 시 즉시 활성화. 물리적 SIM 교체 불필요.',
-    airaloTitle: 'Airalo',
-    airaloDesc: '여행자에게 가장 인기. 중국 요금제 1GB당 약 $5부터. 앱에서 구매, QR코드 스캔, 도착 시 활성화. 데이터 전용 (중국 전화번호 없음).',
+    redteagoTitle: 'Redteago',
+    redteagoUrl: 'https://esim.redteago.com/',
+    redteagoDesc: '중국·아시아 여행에 특화된 eSIM. 트래픽이 만리방화벽 외부 서버를 경유하므로 Google, Gmail, Instagram, WhatsApp, YouTube를 별도 VPN 없이 바로 사용할 수 있습니다.',
+    redteagoBullets: [
+      '만리방화벽 우회 — Google, Gmail, 지도, WhatsApp, Instagram 모두 그대로 작동',
+      '중국 본토, 홍콩, 마카오, 대만 전역에서 현지 수준의 속도',
+      '몇 달러부터 시작하는 유연한 요금제, 간편한 충전, 약정 없음',
+      'QR코드 즉시 발급 — 출국 전 설치, 도착 즉시 활성화',
+      '중국 통신 환경에 정통한 팀의 24시간 영어 채팅 지원',
+    ],
     nomadTitle: 'Nomad / Holafly',
     nomadDesc: '무제한 데이터 요금제 제공. 스트리밍이나 지도를 많이 사용할 예정이라면 적합. 약간 비쌈.',
     airportSimTitle: '공항 SIM 카드',
@@ -955,8 +981,16 @@ const fr: Translations = {
     subtitle: "Restez connecté dès l'atterrissage.",
     esimRecommended: 'eSIM (Recommandé)',
     esimDesc: "Achetez avant de partir. S'active instantanément à l'arrivée. Pas besoin de changer de SIM physique.",
-    airaloTitle: 'Airalo',
-    airaloDesc: 'Le plus populaire pour les voyageurs. Forfaits Chine à partir de ~5$/1Go. Achat dans l\'appli, scan du QR code, activation à l\'arrivée. Données uniquement (pas de numéro chinois).',
+    redteagoTitle: 'Redteago',
+    redteagoUrl: 'https://esim.redteago.com/',
+    redteagoDesc: "Conçu spécifiquement pour la Chine et l'Asie. Le trafic passe par des serveurs en dehors du Grand Firewall — Google, Gmail, Instagram, WhatsApp et YouTube fonctionnent sans VPN supplémentaire.",
+    redteagoBullets: [
+      'Contourne le Grand Firewall — Google, Gmail, Maps, WhatsApp et Instagram fonctionnent immédiatement',
+      'Vitesses au niveau des réseaux locaux en Chine continentale, Hong Kong, Macao et Taïwan',
+      "Forfaits flexibles à partir de quelques dollars, recharges faciles, sans engagement",
+      "QR code envoyé instantanément — installez avant le départ, s'active dès l'atterrissage",
+      'Support chat 24/7 en anglais par une équipe qui connaît la connectivité en Chine',
+    ],
     nomadTitle: 'Nomad / Holafly',
     nomadDesc: 'Forfaits data illimités disponibles. Idéal si vous prévoyez de streamer ou utiliser beaucoup les cartes. Un peu plus cher.',
     airportSimTitle: "Carte SIM à l'aéroport",

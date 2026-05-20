@@ -25,10 +25,26 @@ const t = getTranslations(locale);
             <h2 class="font-display text-2xl font-semibold mb-2">{t.esim.esimRecommended}</h2>
             <p class="text-ink-light text-sm mb-4">{t.esim.esimDesc}</p>
             <div class="space-y-3">
-              <div class="p-3 bg-paper-50 rounded-lg border border-paper-300">
-                <h3 class="font-semibold text-sm mb-1">{t.esim.airaloTitle}</h3>
-                <p class="text-sm text-ink-light">{t.esim.airaloDesc}</p>
-              </div>
+              <a
+                href={t.esim.redteagoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block p-3 bg-paper-50 rounded-lg border border-paper-300 hover:border-mineral hover:bg-paper-100 transition-colors"
+              >
+                <h3 class="font-semibold text-sm mb-1 flex items-center gap-1.5">
+                  <span>{t.esim.redteagoTitle}</span>
+                  <span class="text-mineral text-xs" aria-hidden="true">↗</span>
+                </h3>
+                <p class="text-sm text-ink-light mb-2">{t.esim.redteagoDesc}</p>
+                <ul class="space-y-1 text-sm">
+                  {t.esim.redteagoBullets.map((b: string) => (
+                    <li class="flex gap-2 text-ink-light">
+                      <span class="text-jade shrink-0">✓</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </a>
               <div class="p-3 bg-paper-50 rounded-lg border border-paper-300">
                 <h3 class="font-semibold text-sm mb-1">{t.esim.nomadTitle}</h3>
                 <p class="text-sm text-ink-light">{t.esim.nomadDesc}</p>
